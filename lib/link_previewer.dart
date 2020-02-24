@@ -1,5 +1,6 @@
 library link_previewer;
 
+import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -40,7 +41,7 @@ class LinkPreviewer extends StatefulWidget {
   final Color backgroundColor;
   final Color borderColor;
   final Color defaultPlaceholderColor;
-  final double borderRadius;
+  final BorderRadius borderRadius;
   final ContentDirection direction;
   final Widget placeholder;
   final bool showTitle;
@@ -172,8 +173,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
               : widget.borderColor,
           width: widget.borderColor == null ? 0.0 : 1.0,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(
-            widget.borderRadius == null ? 3.0 : widget.borderRadius)),
+        borderRadius: widget.borderRadius == null ? BorderRadius.circular(4) : widget.borderRadius,
       ),
       height: _height,
       child: _buildLinkView(
