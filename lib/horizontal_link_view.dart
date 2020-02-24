@@ -78,12 +78,19 @@ class HorizontalLinkView extends StatelessWidget {
                   ? Container(
                       color: Color.fromRGBO(235, 235, 235, 1.0),
                     )
-                  : Container(
-                      foregroundDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        image: DecorationImage(image: NetworkImage(imageUri), fit: BoxFit.cover),
-                      ),
-                    ),
+                  : CachedNetworkImage(
+                imageUrl: imageUri,
+                imageBuilder: (context, imageProvider) => Container(
+                  foregroundDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                  ),
+                ),
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+              ),
             ),
             Expanded(
               flex: 3,
