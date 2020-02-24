@@ -1,6 +1,5 @@
 library link_previewer;
 
-import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
@@ -41,7 +40,7 @@ class LinkPreviewer extends StatefulWidget {
   final Color backgroundColor;
   final Color borderColor;
   final Color defaultPlaceholderColor;
-  final BorderRadius borderRadius;
+  final double borderRadius;
   final ContentDirection direction;
   final Widget placeholder;
   final bool showTitle;
@@ -144,7 +143,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         ? widget.placeholder == null
             ? _buildPlaceHolder(_placeholderColor, _height)
             : widget.placeholder
-        : _buildLinkContainer();
+        : _buildLinkContainer(widget.borderRadius);
   }
 
   Widget _buildPlaceHolder(Color color, double defaultHeight) {
@@ -163,7 +162,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
     );
   }
 
-  Widget _buildLinkContainer() {
+  Widget _buildLinkContainer(double borderRadius) {
     return Container(
       decoration: new BoxDecoration(
         color: widget.backgroundColor,
@@ -173,7 +172,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
               : widget.borderColor,
           width: widget.borderColor == null ? 0.0 : 1.0,
         ),
-        borderRadius: widget.borderRadius == null ? BorderRadius.circular(4) : widget.borderRadius,
+        borderRadius: BorderRadius.all(Radius.circular(
+            widget.borderRadius == null ? 3.0 : widget.borderRadius)),
       ),
       height: _height,
       child: _buildLinkView(
@@ -183,12 +183,14 @@ class _LinkPreviewer extends State<LinkPreviewer> {
           _metaData['image'] == null ? "" : _metaData['image'],
           _launchURL,
           widget.showTitle,
-          widget.showBody),
+          widget.showBody,
+          borderRadius,
+      ),
     );
   }
 
   Widget _buildLinkView(
-      link, title, description, imageUri, onTap, showTitle, showBody) {
+      link, title, description, imageUri, onTap, showTitle, showBody, borderRadius) {
     if (widget.direction == ContentDirection.horizontal) {
       return HorizontalLinkView(
         url: link,
@@ -202,6 +204,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         showBody: showBody,
         bodyTextOverflow: widget.bodyTextOverflow,
         bodyMaxLines: widget.bodyMaxLines,
+        borderRadius: borderRadius,
       );
     } else {
       return VerticalLinkPreview(

@@ -14,6 +14,8 @@ class HorizontalLinkView extends StatelessWidget {
     this.showBody,
     this.bodyTextOverflow,
     this.bodyMaxLines,
+    this.borderRadius,
+    this.bodyTextColor,
   })  : assert(imageUri != null),
         assert(title != null),
         assert(url != null),
@@ -32,6 +34,8 @@ class HorizontalLinkView extends StatelessWidget {
   final bool showBody;
   final TextOverflow bodyTextOverflow;
   final int bodyMaxLines;
+  final double borderRadius;
+  final Color bodyTextColor;
 
   double computeTitleFontSize(double width) {
     double size = width * 0.13;
@@ -59,12 +63,8 @@ class HorizontalLinkView extends StatelessWidget {
       var layoutWidth = constraints.biggest.width;
       var layoutHeight = constraints.biggest.height;
 
-      var _titleFontSize = titleFontSize == null
-          ? computeTitleFontSize(layoutWidth)
-          : titleFontSize;
-      var _bodyFontSize = bodyFontSize == null
-          ? computeTitleFontSize(layoutWidth) - 1
-          : bodyFontSize;
+      var _titleFontSize = titleFontSize == null ? computeTitleFontSize(layoutWidth) : titleFontSize;
+      var _bodyFontSize = bodyFontSize == null ? computeTitleFontSize(layoutWidth) - 1 : bodyFontSize;
 
       return InkWell(
         onTap: () => onTap(url),
@@ -78,26 +78,20 @@ class HorizontalLinkView extends StatelessWidget {
                     )
                   : Container(
                       foregroundDecoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(imageUri), fit: BoxFit.cover),
+                        borderRadius: BorderRadius.circular(borderRadius),
+                        image: DecorationImage(image: NetworkImage(imageUri), fit: BoxFit.cover),
                       ),
                     ),
             ),
             Expanded(
               flex: 3,
               child: Column(
-                mainAxisAlignment: showBody == false
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
+                mainAxisAlignment: showBody == false ? MainAxisAlignment.center : MainAxisAlignment.start,
                 children: <Widget>[
                   showTitle == false
                       ? Container()
-                      : _buildTitleContainer(
-                          _titleFontSize, computeTitleLines(layoutHeight)),
-                  showBody == false
-                      ? Container()
-                      : _buildBodyContainer(
-                          _bodyFontSize, computeBodyLines(layoutHeight))
+                      : _buildTitleContainer(_titleFontSize, computeTitleLines(layoutHeight)),
+                  showBody == false ? Container() : _buildBodyContainer(_bodyFontSize, computeBodyLines(layoutHeight))
                 ],
               ),
             ),
@@ -117,8 +111,7 @@ class HorizontalLinkView extends StatelessWidget {
             alignment: Alignment(-1.0, -1.0),
             child: Text(
               title,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: _titleFontSize),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: _titleFontSize),
               overflow: TextOverflow.ellipsis,
               maxLines: _maxLines,
             ),
@@ -134,9 +127,7 @@ class HorizontalLinkView extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 0.0),
         child: Column(
-          mainAxisAlignment: showTitle == false
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
+          mainAxisAlignment: showTitle == false ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
               child: Container(
@@ -144,10 +135,8 @@ class HorizontalLinkView extends StatelessWidget {
                 child: Text(
                   description,
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: _bodyFontSize, color: Colors.grey),
-                  overflow: bodyTextOverflow == null
-                      ? TextOverflow.ellipsis
-                      : bodyTextOverflow,
+                  style: TextStyle(fontSize: _bodyFontSize, color: bodyTextColor),
+                  overflow: bodyTextOverflow == null ? TextOverflow.ellipsis : bodyTextOverflow,
                   maxLines: bodyMaxLines == null ? _maxLines : bodyMaxLines,
                 ),
               ),
