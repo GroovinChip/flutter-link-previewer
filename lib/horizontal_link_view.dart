@@ -15,6 +15,7 @@ class HorizontalLinkView extends StatelessWidget {
     this.bodyTextOverflow,
     this.bodyMaxLines,
     this.borderRadius,
+    this.titleTextColor,
     this.bodyTextColor,
   })  : assert(imageUri != null),
         assert(title != null),
@@ -35,6 +36,7 @@ class HorizontalLinkView extends StatelessWidget {
   final TextOverflow bodyTextOverflow;
   final int bodyMaxLines;
   final double borderRadius;
+  final Color titleTextColor;
   final Color bodyTextColor;
 
   double computeTitleFontSize(double width) {
@@ -111,7 +113,7 @@ class HorizontalLinkView extends StatelessWidget {
             alignment: Alignment(-1.0, -1.0),
             child: Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: _titleFontSize),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: _titleFontSize, color: titleTextColor),
               overflow: TextOverflow.ellipsis,
               maxLines: _maxLines,
             ),

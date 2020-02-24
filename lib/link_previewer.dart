@@ -31,6 +31,8 @@ class LinkPreviewer extends StatefulWidget {
     this.direction = ContentDirection.horizontal,
     this.bodyTextOverflow,
     this.bodyMaxLines,
+    this.titleTextColor,
+    this.bodyTextColor,
   })  : assert(link != null),
         super(key: key);
 
@@ -47,6 +49,8 @@ class LinkPreviewer extends StatefulWidget {
   final bool showBody;
   final TextOverflow bodyTextOverflow;
   final int bodyMaxLines;
+  final Color titleTextColor;
+  final Color bodyTextColor;
 
   @override
   _LinkPreviewer createState() => _LinkPreviewer();
@@ -205,6 +209,8 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         bodyTextOverflow: widget.bodyTextOverflow,
         bodyMaxLines: widget.bodyMaxLines,
         borderRadius: borderRadius,
+        titleTextColor: widget.titleTextColor,
+        bodyTextColor: widget.bodyTextColor,
       );
     } else {
       return VerticalLinkPreview(
