@@ -3,6 +3,7 @@ description: A new Flutter package. It is build for making link looks prettier t
 version: 1.0.4
 author: Dumitru Lapteacru <dlapteacru.intern@gmail.com>
 homepage: https://github.com/dmlapteacru/flutter-link-previewer
+publish_to: 'none'
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -22,6 +23,7 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
+  uses-material-design: true
   # To add assets to your package, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
