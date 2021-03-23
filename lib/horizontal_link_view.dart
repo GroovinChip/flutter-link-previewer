@@ -2,12 +2,12 @@ part of link_previewer;
 
 class HorizontalLinkView extends StatelessWidget {
   HorizontalLinkView({
-    Key key,
-    @required this.url,
-    @required this.title,
-    @required this.description,
-    @required this.imageUri,
-    @required this.onTap,
+    Key? key,
+    required this.url,
+    required this.title,
+    required this.description,
+    required this.imageUri,
+    required this.onTap,
     this.titleFontSize,
     this.bodyFontSize,
     this.showTitle,
@@ -17,27 +17,22 @@ class HorizontalLinkView extends StatelessWidget {
     this.borderRadius,
     this.titleTextColor,
     this.bodyTextColor,
-  })  : assert(imageUri != null),
-        assert(title != null),
-        assert(url != null),
-        assert(description != null),
-        assert(onTap != null),
-        super(key: key);
+  })  : super(key: key);
 
   final String url;
   final String title;
   final String description;
   final String imageUri;
   final Function onTap;
-  final double titleFontSize;
-  final double bodyFontSize;
-  final bool showTitle;
-  final bool showBody;
-  final TextOverflow bodyTextOverflow;
-  final int bodyMaxLines;
-  final double borderRadius;
-  final Color titleTextColor;
-  final Color bodyTextColor;
+  final double? titleFontSize;
+  final double? bodyFontSize;
+  final bool? showTitle;
+  final bool? showBody;
+  final TextOverflow? bodyTextOverflow;
+  final int? bodyMaxLines;
+  final double? borderRadius;
+  final Color? titleTextColor;
+  final Color? bodyTextColor;
 
   double computeTitleFontSize(double width) {
     double size = width * 0.13;
@@ -54,7 +49,7 @@ class HorizontalLinkView extends StatelessWidget {
   int computeBodyLines(layoutHeight) {
     var lines = 1;
     if (layoutHeight > 40) {
-      lines += (layoutHeight - 40.0) ~/ 15.0;
+      lines += ((layoutHeight - 40.0) ~/ 15.0) as int;
     }
     return lines;
   }
@@ -82,7 +77,7 @@ class HorizontalLinkView extends StatelessWidget {
                 imageUrl: imageUri,
                 imageBuilder: (context, imageProvider) => Container(
                   foregroundDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(borderRadius),
+                    borderRadius: BorderRadius.circular(borderRadius == null ? 1.0 : borderRadius!),
                     image: DecorationImage(
                           image: imageProvider,
                           fit: BoxFit.cover,

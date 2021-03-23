@@ -2,12 +2,12 @@ part of link_previewer;
 
 class VerticalLinkPreview extends StatelessWidget {
   VerticalLinkPreview({
-    Key key,
-    @required this.url,
-    @required this.title,
-    @required this.description,
-    @required this.imageUri,
-    @required this.onTap,
+    Key? key,
+    required this.url,
+    required this.title,
+    required this.description,
+    required this.imageUri,
+    required this.onTap,
     this.titleFontSize,
     this.bodyFontSize,
     this.showTitle,
@@ -26,12 +26,12 @@ class VerticalLinkPreview extends StatelessWidget {
   final String description;
   final String imageUri;
   final Function onTap;
-  final double titleFontSize;
-  final double bodyFontSize;
-  final bool showTitle;
-  final bool showBody;
-  final TextOverflow bodyTextOverflow;
-  final int bodyMaxLines;
+  final double? titleFontSize;
+  final double? bodyFontSize;
+  final bool? showTitle;
+  final bool? showBody;
+  final TextOverflow? bodyTextOverflow;
+  final int? bodyMaxLines;
 
   double computeTitleFontSize(double height) {
     double size = height * 0.13;
@@ -45,7 +45,7 @@ class VerticalLinkPreview extends StatelessWidget {
     return layoutHeight - layoutWidth < 50 ? 1 : 2;
   }
 
-  int computeBodyLines(layoutHeight) {
+  int? computeBodyLines(layoutHeight) {
     return layoutHeight ~/ 60 == 0 ? 1 : layoutHeight ~/ 60;
   }
 

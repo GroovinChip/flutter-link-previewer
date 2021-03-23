@@ -1,29 +1,28 @@
 library link_previewer;
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
-import 'package:html/dom.dart' hide Text;
-import 'package:flutter/material.dart' hide Element;
 import 'dart:async';
 
-part 'parser/web_page_parser.dart';
-
-part 'package:link_previewer/horizontal_link_view.dart';
-
-part 'package:link_previewer/vertical_link_preview.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart' show IterableExtension;
+import 'package:flutter/material.dart' hide Element;
+import 'package:html/dom.dart' hide Text;
+import 'package:html/parser.dart' as parser;
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 part 'package:link_previewer/content_direction.dart';
+part 'package:link_previewer/horizontal_link_view.dart';
+part 'package:link_previewer/vertical_link_preview.dart';
+part 'parser/web_page_parser.dart';
 
 class LinkPreviewer extends StatefulWidget {
   LinkPreviewer({
-    Key key,
-    @required this.link,
+    Key? key,
+    required this.link,
     this.titleFontSize,
     this.bodyFontSize,
     this.backgroundColor = Colors.white,
-    this.borderColor = Colors.deepOrangeAccent,
+    this.borderColor,
     this.defaultPlaceholderColor,
     this.borderRadius,
     this.placeholder,
@@ -34,42 +33,41 @@ class LinkPreviewer extends StatefulWidget {
     this.bodyMaxLines,
     this.titleTextColor,
     this.bodyTextColor,
-  })  : assert(link != null),
-        super(key: key);
+  }) : super(key: key);
 
   final String link;
-  final double titleFontSize;
-  final double bodyFontSize;
-  final Color backgroundColor;
-  final Color borderColor;
-  final Color defaultPlaceholderColor;
-  final double borderRadius;
+  final double? titleFontSize;
+  final double? bodyFontSize;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final Color? defaultPlaceholderColor;
+  final double? borderRadius;
   final ContentDirection direction;
-  final Widget placeholder;
+  final Widget? placeholder;
   final bool showTitle;
   final bool showBody;
-  final TextOverflow bodyTextOverflow;
-  final int bodyMaxLines;
-  final Color titleTextColor;
-  final Color bodyTextColor;
+  final TextOverflow? bodyTextOverflow;
+  final int? bodyMaxLines;
+  final Color? titleTextColor;
+  final Color? bodyTextColor;
 
   @override
   _LinkPreviewer createState() => _LinkPreviewer();
 }
 
 class _LinkPreviewer extends State<LinkPreviewer> {
-  Map _metaData;
-  double _height;
-  String _link;
-  Color _placeholderColor;
+  Map? _metaData;
+  double? _height;
+  String? _link;
+  Color? _placeholderColor;
   bool _failedToLoadImage = false;
 
   @override
   void initState() {
     super.initState();
     _link = widget.link.trim();
-    if (_link.startsWith("https")) {
-      _link = "http" + _link.split("https")[1];
+    if (_link!.startsWith("https")) {
+      _link = "http" + _link!.split("https")[1];
     }
     _placeholderColor = widget.defaultPlaceholderColor == null
         ? Color.fromRGBO(235, 235, 235, 1.0)
@@ -101,12 +99,12 @@ class _LinkPreviewer extends State<LinkPreviewer> {
     });
   }
 
-  String _getUriWithPrefix(uri) {
+  String? _getUriWithPrefix(uri) {
     return WebPageParser._addWWWPrefixIfNotExists(uri);
   }
 
   void _getMetaData(link) async {
-    Map data = await WebPageParser.getData(link);
+    Map? data = await WebPageParser.getData(link);
     if (data != null) {
       _validateImageUri(data['image']);
       setState(() {
@@ -147,11 +145,11 @@ class _LinkPreviewer extends State<LinkPreviewer> {
     return _metaData == null
         ? widget.placeholder == null
             ? _buildPlaceHolder(_placeholderColor, _height)
-            : widget.placeholder
+            : widget.placeholder!
         : _buildLinkContainer(widget.borderRadius);
   }
 
-  Widget _buildPlaceHolder(Color color, double defaultHeight) {
+  Widget _buildPlaceHolder(Color? color, double? defaultHeight) {
     return Container(
       height: defaultHeight,
       child: LayoutBuilder(builder: (context, constraints) {
@@ -167,35 +165,36 @@ class _LinkPreviewer extends State<LinkPreviewer> {
     );
   }
 
-  Widget _buildLinkContainer(double borderRadius) {
+  Widget _buildLinkContainer(double? borderRadius) {
     return Container(
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: widget.backgroundColor,
         border: Border.all(
-          color: widget.borderColor == null
-              ? widget.backgroundColor
-              : widget.borderColor,
-          width: widget.borderColor == null ? 0.0 : 1.0,
+          color: widget.borderColor ?? Colors.transparent,
+          width: 1.0,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(
-            widget.borderRadius == null ? 3.0 : widget.borderRadius)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(
+            widget.borderRadius == null ? 3.0 : widget.borderRadius!,
+          ),
+        ),
       ),
       height: _height,
       child: _buildLinkView(
-          _link,
-          _metaData['title'] == null ? "" : _metaData['title'],
-          _metaData['description'] == null ? "" : _metaData['description'],
-          _metaData['image'] == null ? "" : _metaData['image'],
-          _launchURL,
-          widget.showTitle,
-          widget.showBody,
-          borderRadius,
+        _link,
+        _metaData!['title'] == null ? "" : _metaData!['title'],
+        _metaData!['description'] == null ? "" : _metaData!['description'],
+        _metaData!['image'] == null ? "" : _metaData!['image'],
+        _launchURL,
+        widget.showTitle,
+        widget.showBody,
+        borderRadius,
       ),
     );
   }
 
-  Widget _buildLinkView(
-      link, title, description, imageUri, onTap, showTitle, showBody, borderRadius) {
+  Widget _buildLinkView(link, title, description, imageUri, onTap, showTitle,
+      showBody, borderRadius) {
     if (widget.direction == ContentDirection.horizontal) {
       return HorizontalLinkView(
         url: link,
@@ -203,7 +202,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         description: description,
         imageUri: _failedToLoadImage == false
             ? imageUri
-            : _getUriWithPrefix(imageUri),
+            : _getUriWithPrefix(imageUri)!,
         onTap: onTap,
         showTitle: showTitle,
         showBody: showBody,
@@ -220,7 +219,7 @@ class _LinkPreviewer extends State<LinkPreviewer> {
         description: description,
         imageUri: _failedToLoadImage == false
             ? imageUri
-            : _getUriWithPrefix(imageUri),
+            : _getUriWithPrefix(imageUri)!,
         onTap: onTap,
         showTitle: showTitle,
         showBody: showBody,
